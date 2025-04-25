@@ -1,0 +1,92 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.container {
+    text-align: center;
+    padding: 50px;
+}
+
+/* Header Styles */
+header h1 {
+    font-size: 3em;
+    margin: 20px 0;
+    color: #0a74da;
+}
+
+header p {
+    font-size: 1.2em;
+    color: #b0b0b0;
+}
+
+/* Theme Toggle Button */
+.theme-toggle button {
+    padding: 10px 20px;
+    background-color: #0a74da;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle button:hover {
+    background-color: #005bb5;
+}
+
+/* Music Selector */
+.music-selector {
+    margin: 40px 0;
+}
+
+select {
+    padding: 10px;
+    font-size: 1.2em;
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 5px;
+    color: #fff;
+}
+
+/* Action Buttons */
+.action-buttons a {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #0a74da;
+    margin: 10px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons a:hover {
+    background-color: #005bb5;
+}
+
+/* Dark Mode Styles */
+body.dark {
+    background-color: #181818;
+}
+
+body.dark header h1 {
+    color: #0a74da;
+}
+
+/* Light Mode Styles */
+body.light {
+    background-color: #fff;
+    color: black;
+}
+
+body.light header h1 {
+    color: #0044cc;
+}
