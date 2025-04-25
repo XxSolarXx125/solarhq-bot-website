@@ -50,18 +50,19 @@
             cursor: pointer;
             display: inline-block;
             margin: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); /* Dark shadow */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        .action-buttons a {
-            background-color: #0a74da;
-            color: white;
-        }
+.action-buttons a {
+    background-color: #1d2d4a; /* Darker blue */
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); /* Darker shadow */
+}
 
-        .action-buttons a:hover {
-            background-color: #005bb5;
-            transform: scale(1.05);
-        }
+.action-buttons a:hover {
+    background-color: #162d44; /* Even darker blue for hover */
+    transform: scale(1.05);
+}
 
         .theme-toggle button {
             background-color: #ff4081;
@@ -73,15 +74,16 @@
             transform: scale(1.05);
         }
 
-        .settings-btn {
-            background-color: #4caf50;
-            color: white;
-        }
+.settings-btn {
+    background-color: #2e7d32; /* Darker green */
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); /* Darker shadow */
+}
 
-        .settings-btn:hover {
-            background-color: #388e3c;
-            transform: scale(1.05);
-        }
+.settings-btn:hover {
+    background-color: #1b5e20; /* Darker green for hover */
+    transform: scale(1.05);
+}
 
         .control-btn {
             background-color: #333;
@@ -236,15 +238,98 @@
                 padding: 12px 20px;
             }
         }
-
-        /* Position buttons to the top right */
-        .action-buttons, .settings-btn {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            margin: 10px;
-        }
     </style>
+    <script>
+        let currentTheme = 'dark';
+        let musicVolume = 50;
+        let currentAudio = null;
+
+        // Toggle between Dark and Light mode
+        function toggleTheme() {
+            const body = document.body;
+            const themeButton = document.getElementById('theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.classList.remove('dark');
+                body.classList.add('light');
+                themeButton.innerText = 'Switch to Dark Mode';
+                currentTheme = 'light';
+            } else {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                themeButton.innerText = 'Switch to Light Mode';
+                currentTheme = 'dark';
+            }
+        }
+
+        // Open and close the settings UI
+        function toggleSettings() {
+            const settingsUI = document.getElementById('settings-ui');
+            settingsUI.style.display = settingsUI.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Apply Gradient Background
+        function applyGradient() {
+            document.body.classList.toggle('gradient');
+        }
+
+        // Adjust Music Volume
+        function adjustVolume() {
+            musicVolume = document.getElementById('volume-slider').value;
+            if (currentAudio) {
+                currentAudio.volume = musicVolume / 100;
+            }
+        }
+
+        // Play selected music
+        function playMusic() {
+            const musicTrack = document.getElementById('music-select').value;
+            if (currentAudio) {
+                currentAudio.pause();  // Stop the current song
+                currentAudio.currentTime = 0; // Reset the song to the beginning
+            }
+            currentAudio = new Audio(musicTrack);
+            currentAudio.volume = musicVolume / 100;
+            currentAudio.play();
+        }
+
+        // Pause current music
+        function pauseMusic() {
+            if (currentAudio) {
+                currentAudio.pause();
+            }
+        }
+
+        // Stop current music
+        function stopMusic() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+        }
+
+        // Fetch music files from the GitHub repository
+        async function loadMusic() {
+            const repoURL = 'https://api.github.com/repos/XxSolarXx125/solarhq-bot-website/contents/Songs';
+            const response = await fetch(repoURL);
+            const data = await response.json();
+
+            const musicSelect = document.getElementById('music-select');
+            data
+                .filter(item => item.name.endsWith('.mp3'))
+                .forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.download_url;
+                    option.textContent = item.name;
+                    musicSelect.appendChild(option);
+                });
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            loadMusic();
+        };
+    </script>
 </head>
 <body>
     <div class="container">
