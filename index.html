@@ -13,6 +13,7 @@
             background-color: #121212;
             color: white;
             transition: all 0.3s ease;
+            overflow-x: hidden;
         }
 
         .container {
@@ -25,27 +26,36 @@
             font-size: 3em;
             margin: 20px 0;
             color: #0a74da;
+            animation: fadeIn 2s ease-in-out;
         }
 
         header p {
             font-size: 1.2em;
             color: #b0b0b0;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        /* Button Animations */
+        .action-buttons a, .theme-toggle button, .settings-btn {
+            padding: 15px 30px;
+            background-color: #0a74da;
+            margin: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-buttons a:hover, .theme-toggle button:hover, .settings-btn:hover {
+            background-color: #005bb5;
+            transform: scale(1.1);
         }
 
         /* Theme Toggle Button */
         .theme-toggle button {
-            padding: 10px 20px;
-            background-color: #0a74da;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .theme-toggle button:hover {
-            background-color: #005bb5;
+            margin-top: 20px;
         }
 
         /* Music Selector */
@@ -60,73 +70,143 @@
             border: 1px solid #444;
             border-radius: 5px;
             color: #fff;
+            animation: fadeIn 1s ease-in-out;
         }
 
-        /* Action Buttons */
-        .action-buttons a {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #0a74da;
-            margin: 10px;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease;
+        /* Settings UI */
+        .settings-ui {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            width: 300px;
+            animation: slideIn 0.5s ease-in-out;
         }
 
-        .action-buttons a:hover {
-            background-color: #005bb5;
-        }
-
-        /* Dark Mode Styles */
-        body.dark {
-            background-color: #181818;
-        }
-
-        body.dark header h1 {
+        .settings-ui h2 {
+            font-size: 1.5em;
             color: #0a74da;
+            margin-bottom: 20px;
         }
 
-        /* Light Mode Styles */
-        body.light {
-            background-color: #fff;
-            color: black;
+        .settings-ui label {
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
         }
 
-        body.light header h1 {
-            color: #0044cc;
+        .settings-ui input[type="range"] {
+            width: 100%;
+        }
+
+        /* Animation Effects */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translate(-50%, -60%); opacity: 0; }
+            100% { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        /* Gradient Background */
+        body.gradient {
+            background: linear-gradient(135deg, #1c1c1c, #0a74da);
         }
     </style>
-    <script src="script.js" defer></script>
+    <script>
+        let currentTheme = 'dark';
+        let musicVolume = 50;
+
+        // Toggle between Dark and Light mode
+        function toggleTheme() {
+            const body = document.body;
+            const themeButton = document.getElementById('theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.classList.remove('dark');
+                body.classList.add('light');
+                themeButton.innerText = 'Switch to Dark Mode';
+                currentTheme = 'light';
+            } else {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                themeButton.innerText = 'Switch to Light Mode';
+                currentTheme = 'dark';
+            }
+        }
+
+        // Open and close the settings UI
+        function toggleSettings() {
+            const settingsUI = document.getElementById('settings-ui');
+            settingsUI.style.display = settingsUI.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Apply Gradient Background
+        function applyGradient() {
+            document.body.classList.toggle('gradient');
+        }
+
+        // Adjust Music Volume
+        function adjustVolume() {
+            musicVolume = document.getElementById('volume-slider').value;
+            console.log('Music Volume:', musicVolume); // Use this value in your music player functionality
+        }
+
+        // Play selected music (Example)
+        function playMusic() {
+            const musicTrack = document.getElementById('music-select').value;
+            console.log('Playing music:', musicTrack); // Replace this with actual music playing logic
+        }
+    </script>
 </head>
 <body class="dark">
-    <!-- Main Content -->
     <div class="container">
         <header>
             <h1>Welcome to SolarHQ</h1>
             <p>Your ultimate Discord bot experience.</p>
         </header>
 
-        <!-- User Customization Section -->
+        <!-- Theme Toggle Button -->
         <div class="theme-toggle">
-            <button id="theme-toggle">Switch to Light Mode</button>
+            <button id="theme-toggle" onclick="toggleTheme()">Switch to Light Mode</button>
         </div>
 
         <!-- Music Selector -->
         <div class="music-selector">
             <h2>Select a Music Track</h2>
             <select id="music-select">
-                <!-- Music options populated by JavaScript from GitHub -->
+                <option value="track1">Track 1</option>
+                <option value="track2">Track 2</option>
+                <option value="track3">Track 3</option>
             </select>
             <button onclick="playMusic()">Play Music</button>
         </div>
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <a href="https://discord.gg/rMfssbEPpS" target="_blank" class="discord-btn">Join Our Discord</a>
-            <a href="https://discord.com/oauth2/authorize?client_id=1361359933030793216&scope=bot&permissions=BOT_PERMISSIONS" target="_blank" class="invite-btn">Invite SolarHQ Bot</a>
+            <a href="https://discord.gg/rMfssbEPpS" target="_blank">Join Our Discord</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1361359933030793216&scope=bot&permissions=BOT_PERMISSIONS" target="_blank">Invite SolarHQ Bot</a>
+            <button class="settings-btn" onclick="toggleSettings()">Settings</button>
         </div>
+    </div>
+
+    <!-- Settings UI -->
+    <div id="settings-ui" class="settings-ui">
+        <h2>Settings</h2>
+        <label for="volume-slider">Music Volume</label>
+        <input type="range" id="volume-slider" min="0" max="100" value="50" onchange="adjustVolume()">
+
+        <label for="gradient-toggle">Apply Gradient</label>
+        <input type="checkbox" id="gradient-toggle" onchange="applyGradient()">
+
+        <button onclick="toggleSettings()">Close Settings</button>
     </div>
 </body>
 </html>
