@@ -2,7 +2,7 @@
 const musicSelect = document.getElementById("music-select");
 
 // Fetch music list from GitHub repository
-fetch('https://api.github.com/repos/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/contents/NO')
+fetch('https://api.github.com/repos/XxSolarXx125/solarhq-bot-website/contents/NO')
     .then(response => response.json())
     .then(data => {
         data.forEach(file => {
