@@ -86,12 +86,14 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
             width: 300px;
             animation: slideIn 0.5s ease-in-out;
+            cursor: move;
         }
 
         .settings-ui h2 {
             font-size: 1.5em;
             color: #0a74da;
             margin-bottom: 20px;
+            user-select: none;
         }
 
         .settings-ui label {
@@ -100,7 +102,18 @@
             margin-bottom: 10px;
         }
 
-        .settings-ui input[type="range"] {
+        .settings-ui input[type="range"], .settings-ui input[type="color"] {
+            width: 100%;
+        }
+
+        .settings-ui .close-btn {
+            padding: 10px;
+            background-color: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
             width: 100%;
         }
 
@@ -118,6 +131,11 @@
         /* Gradient Background */
         body.gradient {
             background: linear-gradient(135deg, #1c1c1c, #0a74da);
+        }
+
+        /* Draggable functionality */
+        .settings-ui {
+            position: absolute;
         }
     </style>
     <script>
@@ -164,6 +182,28 @@
             const musicTrack = document.getElementById('music-select').value;
             console.log('Playing music:', musicTrack); // Replace this with actual music playing logic
         }
+
+        // Draggable Functionality for Settings UI
+        const settingsUI = document.getElementById('settings-ui');
+        const settingsHeader = settingsUI.querySelector('h2');
+
+        settingsHeader.addEventListener('mousedown', (e) => {
+            const offsetX = e.clientX - settingsUI.offsetLeft;
+            const offsetY = e.clientY - settingsUI.offsetTop;
+
+            const mouseMoveHandler = (e) => {
+                settingsUI.style.left = e.clientX - offsetX + 'px';
+                settingsUI.style.top = e.clientY - offsetY + 'px';
+            };
+
+            const mouseUpHandler = () => {
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            };
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        });
     </script>
 </head>
 <body class="dark">
@@ -182,9 +222,9 @@
         <div class="music-selector">
             <h2>Select a Music Track</h2>
             <select id="music-select">
-                <option value="track1">Track 1</option>
-                <option value="track2">Track 2</option>
-                <option value="track3">Track 3</option>
+                <option value="track1.mp3">Track 1</option>
+                <option value="track2.mp3">Track 2</option>
+                <option value="track3.mp3">Track 3</option>
             </select>
             <button onclick="playMusic()">Play Music</button>
         </div>
@@ -206,7 +246,13 @@
         <label for="gradient-toggle">Apply Gradient</label>
         <input type="checkbox" id="gradient-toggle" onchange="applyGradient()">
 
-        <button onclick="toggleSettings()">Close Settings</button>
+        <label for="bg-color">Background Color</label>
+        <input type="color" id="bg-color" onchange="document.body.style.backgroundColor = this.value">
+
+        <label for="button-color">Button Color</label>
+        <input type="color" id="button-color" onchange="document.querySelectorAll('.action-buttons a').forEach(btn => btn.style.backgroundColor = this.value)">
+
+        <button class="close-btn" onclick="toggleSettings()">Close Settings</button>
     </div>
 </body>
 </html>
