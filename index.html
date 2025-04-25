@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarHQ - Discord Bot</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="dark">
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1>Welcome to SolarHQ</h1>
+            <p>Your ultimate Discord bot experience.</p>
+        </header>
+
+        <!-- User Customization Section -->
+        <div class="theme-toggle">
+            <button id="theme-toggle">Switch to Light Mode</button>
+        </div>
+
+        <!-- Music Selector -->
+        <div class="music-selector">
+            <h2>Select a Music Track</h2>
+            <select id="music-select">
+                <!-- Music options populated by JavaScript from GitHub -->
+            </select>
+            <button onclick="playMusic()">Play Music</button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="https://discord.com/invite/your-discord-link" target="_blank" class="discord-btn">Join Our Discord</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_CLIENT_ID&scope=bot&permissions=BOT_PERMISSIONS" target="_blank" class="invite-btn">Invite SolarHQ Bot</a>
+        </div>
+    </div>
+</body>
+</html>
