@@ -177,7 +177,7 @@
             console.log('Music Volume:', musicVolume); // Use this value in your music player functionality
         }
 
-        // Play selected music (Example)
+        // Play selected music
         function playMusic() {
             const musicTrack = document.getElementById('music-select').value;
             const audio = new Audio(musicTrack);
@@ -185,19 +185,39 @@
             audio.play();
         }
 
-        // Fetch MP3 files from your GitHub repo and populate the music selector
-        function loadMusic() {
+        // Fetch MP3 files from your GitHub repo dynamically and populate the music selector
+        async function loadMusic() {
             const musicSelect = document.getElementById('music-select');
-            const musicFiles = [
-                "track1.mp3", "track2.mp3", "track3.mp3" // Add your .mp3 files here
-            ];
-
+            const musicFiles = await fetchGitHubMP3Files();
+            
             musicFiles.forEach(file => {
                 const option = document.createElement('option');
-                option.value = `https://github.com/XxSolarXx125/solarhq-bot-website/raw/main/${file}`; // Update with correct path
-                option.textContent = file.replace('.mp3', ''); // Display song name without extension
+                option.value = file.url;
+                option.textContent = file.name.replace('.mp3', ''); // Display song name without extension
                 musicSelect.appendChild(option);
             });
+        }
+
+        // Function to fetch .mp3 files from GitHub repository using GitHub API
+        async function fetchGitHubMP3Files() {
+            const repoURL = 'https://api.github.com/repos/XxSolarXx125/solarhq-bot-website/contents/';
+            const folderPath = ''; // Change this if you want to target a specific folder
+            const apiURL = `${repoURL}${folderPath}`;
+
+            try {
+                const response = await fetch(apiURL);
+                const data = await response.json();
+                
+                const mp3Files = data.filter(file => file.name.endsWith('.mp3')).map(file => ({
+                    name: file.name,
+                    url: file.download_url
+                }));
+
+                return mp3Files;
+            } catch (error) {
+                console.error('Error fetching MP3 files:', error);
+                return [];
+            }
         }
 
         // Draggable Functionality for Settings UI
