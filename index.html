@@ -41,7 +41,7 @@
         }
 
         /* Button styles */
-        .action-buttons a, .theme-toggle button, .settings-btn {
+        .action-buttons a, .theme-toggle button, .settings-btn, .control-btn {
             padding: 15px 25px;
             font-size: 1.2em;
             text-decoration: none;
@@ -83,7 +83,17 @@
             transform: scale(1.05);
         }
 
-        /* Music Selector */
+        .control-btn {
+            background-color: #333;
+            color: white;
+        }
+
+        .control-btn:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+
+        /* Music Player */
         .music-selector {
             margin: 40px 0;
             animation: fadeIn 1.5s ease-in-out;
@@ -158,20 +168,48 @@
             background-color: #f44336;
         }
 
-        /* Animation Effects */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        /* Music Controls */
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
         }
 
-        @keyframes slideIn {
-            0% { transform: translate(-50%, -60%); opacity: 0; }
-            100% { transform: translate(-50%, -50%); opacity: 1; }
+        .music-controls button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        /* Gradient Background */
-        body.gradient {
-            background: linear-gradient(135deg, #1c1c1c, #0a74da);
+        .music-controls button:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+
+        /* Footer Section */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #1c1c1c;
+            color: #fff;
+            font-size: 1.1em;
+            border-top: 2px solid #444;
+        }
+
+        footer a {
+            color: #0a74da;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         /* Draggable functionality */
@@ -193,34 +231,16 @@
                 margin: 20px 0;
             }
 
-            .action-buttons a, .theme-toggle button, .settings-btn {
+            .action-buttons a, .theme-toggle button, .settings-btn, .control-btn {
                 font-size: 1em;
                 padding: 12px 20px;
             }
-        }
-
-        /* Footer Section */
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            background-color: #1c1c1c;
-            color: #fff;
-            font-size: 1.1em;
-            border-top: 2px solid #444;
-        }
-
-        footer a {
-            color: #0a74da;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
         }
     </style>
     <script>
         let currentTheme = 'dark';
         let musicVolume = 50;
+        let currentAudio = null;
 
         // Toggle between Dark and Light mode
         function toggleTheme() {
@@ -254,47 +274,58 @@
         // Adjust Music Volume
         function adjustVolume() {
             musicVolume = document.getElementById('volume-slider').value;
-            console.log('Music Volume:', musicVolume); // Use this value in your music player functionality
+            if (currentAudio) {
+                currentAudio.volume = musicVolume / 100;
+            }
         }
 
         // Play selected music
         function playMusic() {
             const musicTrack = document.getElementById('music-select').value;
-            const audio = new Audio(musicTrack);
-            audio.volume = musicVolume / 100;  // Adjust volume
-            audio.play();
+            if (currentAudio) {
+                currentAudio.pause();  // Stop the current song
+                currentAudio.currentTime = 0; // Reset the song to the beginning
+            }
+            currentAudio = new Audio(musicTrack);
+            currentAudio.volume = musicVolume / 100;
+            currentAudio.play();
         }
 
-        // Fetch MP3 files from your GitHub repo dynamically and populate the music selector
+        // Pause current music
+        function pauseMusic() {
+            if (currentAudio) {
+                currentAudio.pause();
+            }
+        }
+
+        // Stop current music
+        function stopMusic() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+        }
+
+        // Fetch music files from the GitHub repository
         async function loadMusic() {
-            const musicSelect = document.getElementById('music-select');
-            const musicFiles = await fetchGitHubMP3Files();
-            
-            musicFiles.forEach(file => {
-                const option = document.createElement('option');
-                option.value = file.url;
-                option.textContent = file.name.replace('.mp3', ''); // Display song name without extension
-                musicSelect.appendChild(option);
-            });
-        }
-
-        // Function to fetch .mp3 files from GitHub repository using GitHub API
-        async function fetchGitHubMP3Files() {
             const repoURL = 'https://api.github.com/repos/XxSolarXx125/solarhq-bot-website/contents/Songs';
             const response = await fetch(repoURL);
             const data = await response.json();
 
-            return data
+            const musicSelect = document.getElementById('music-select');
+            data
                 .filter(item => item.name.endsWith('.mp3'))
-                .map(item => ({
-                    name: item.name,
-                    url: item.download_url
-                }));
+                .forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.download_url;
+                    option.textContent = item.name;
+                    musicSelect.appendChild(option);
+                });
         }
 
         // Initialize the page
         window.onload = function() {
-            loadMusic();  // Fetch and populate the music files
+            loadMusic();
         };
     </script>
 </head>
@@ -310,12 +341,19 @@
             <a href="https://discord.com/oauth2/authorize?client_id=1361359933030793216&scope=bot&permissions=8" target="_blank">Invite SolarHQ Bot</a>
         </div>
 
-        <!-- Music Player -->
+        <!-- Music Selector -->
         <div class="music-selector">
             <h3>Select a Track</h3>
             <select id="music-select" onchange="playMusic()">
                 <option>Select a song</option>
             </select>
+        </div>
+
+        <!-- Music Controls -->
+        <div class="music-controls">
+            <button class="control-btn" onclick="playMusic()">Play</button>
+            <button class="control-btn" onclick="pauseMusic()">Pause</button>
+            <button class="control-btn" onclick="stopMusic()">Stop</button>
         </div>
 
         <!-- Settings Button -->
