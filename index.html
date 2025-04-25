@@ -7,13 +7,13 @@
     <style>
         /* Global styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #121212;
-            color: white;
-            transition: all 0.3s ease;
+            color: #fff;
             overflow-x: hidden;
+            transition: background-color 0.3s ease;
         }
 
         .container {
@@ -21,56 +21,83 @@
             padding: 50px;
         }
 
-        /* Header Styles */
+        /* Header */
         header h1 {
-            font-size: 3em;
-            margin: 20px 0;
+            font-size: 3.5em;
             color: #0a74da;
-            animation: fadeIn 2s ease-in-out;
+            margin: 20px 0;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         header p {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: #b0b0b0;
             animation: fadeIn 2s ease-in-out;
+            margin-bottom: 40px;
         }
 
-        /* Button Animations */
+        /* Button styles */
         .action-buttons a, .theme-toggle button, .settings-btn {
-            padding: 15px 30px;
-            background-color: #0a74da;
-            margin: 10px;
-            color: white;
+            padding: 15px 25px;
+            font-size: 1.2em;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1em;
+            border-radius: 8px;
             transition: background-color 0.3s ease, transform 0.3s ease;
             cursor: pointer;
+            display: inline-block;
+            margin: 10px;
         }
 
-        .action-buttons a:hover, .theme-toggle button:hover, .settings-btn:hover {
+        .action-buttons a {
+            background-color: #0a74da;
+            color: white;
+        }
+
+        .action-buttons a:hover {
             background-color: #005bb5;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
-        /* Theme Toggle Button */
         .theme-toggle button {
-            margin-top: 20px;
+            background-color: #ff4081;
+            color: white;
+        }
+
+        .theme-toggle button:hover {
+            background-color: #f50057;
+            transform: scale(1.05);
+        }
+
+        .settings-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .settings-btn:hover {
+            background-color: #388e3c;
+            transform: scale(1.05);
         }
 
         /* Music Selector */
         .music-selector {
             margin: 40px 0;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         select {
-            padding: 10px;
+            padding: 12px;
             font-size: 1.2em;
             background-color: #333;
-            border: 1px solid #444;
+            color: white;
             border-radius: 5px;
-            color: #fff;
-            animation: fadeIn 1s ease-in-out;
+            border: 1px solid #444;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        select:hover {
+            background-color: #444;
+            transform: scale(1.05);
         }
 
         /* Settings UI */
@@ -84,16 +111,15 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            width: 300px;
+            width: 320px;
             animation: slideIn 0.5s ease-in-out;
             cursor: move;
         }
 
         .settings-ui h2 {
-            font-size: 1.5em;
+            font-size: 1.6em;
             color: #0a74da;
             margin-bottom: 20px;
-            user-select: none;
         }
 
         .settings-ui label {
@@ -104,17 +130,21 @@
 
         .settings-ui input[type="range"], .settings-ui input[type="color"] {
             width: 100%;
+            margin-bottom: 20px;
         }
 
         .settings-ui .close-btn {
-            padding: 10px;
+            padding: 12px;
             background-color: #ff3b30;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
             width: 100%;
+        }
+
+        .settings-ui .close-btn:hover {
+            background-color: #f44336;
         }
 
         /* Animation Effects */
@@ -136,6 +166,26 @@
         /* Draggable functionality */
         .settings-ui {
             position: absolute;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+
+            .music-selector {
+                margin: 20px 0;
+            }
+
+            .action-buttons a, .theme-toggle button, .settings-btn {
+                font-size: 1em;
+                padding: 12px 20px;
+            }
         }
     </style>
     <script>
@@ -201,7 +251,7 @@
         // Function to fetch .mp3 files from GitHub repository using GitHub API
         async function fetchGitHubMP3Files() {
             const repoURL = 'https://api.github.com/repos/XxSolarXx125/solarhq-bot-website/contents/';
-            const folderPath = ''; // Change this if you want to target a specific folder
+            const folderPath = 'Songs'; // Folder path where .mp3 files are stored
             const apiURL = `${repoURL}${folderPath}`;
 
             try {
@@ -270,27 +320,21 @@
         <!-- Action Buttons -->
         <div class="action-buttons">
             <a href="https://discord.gg/rMfssbEPpS" target="_blank">Join Our Discord</a>
-            <a href="https://discord.com/oauth2/authorize?client_id=1361359933030793216&scope=bot&permissions=BOT_PERMISSIONS" target="_blank">Invite SolarHQ Bot</a>
-            <button class="settings-btn" onclick="toggleSettings()">Settings</button>
+            <a href="https://discord.com/oauth2/authorize?client_id=1361359933030793216&scope=bot&permissions=8" target="_blank">Invite SolarHQ Bot</a>
         </div>
+
+        <!-- Settings Button -->
+        <button class="settings-btn" onclick="toggleSettings()">Settings</button>
     </div>
 
     <!-- Settings UI -->
-    <div id="settings-ui" class="settings-ui">
+    <div class="settings-ui" id="settings-ui">
         <h2>Settings</h2>
-        <label for="volume-slider">Music Volume</label>
-        <input type="range" id="volume-slider" min="0" max="100" value="50" onchange="adjustVolume()">
-
-        <label for="gradient-toggle">Apply Gradient</label>
-        <input type="checkbox" id="gradient-toggle" onchange="applyGradient()">
-
-        <label for="bg-color">Background Color</label>
-        <input type="color" id="bg-color" onchange="document.body.style.backgroundColor = this.value">
-
-        <label for="button-color">Button Color</label>
-        <input type="color" id="button-color" onchange="document.querySelectorAll('.action-buttons a').forEach(btn => btn.style.backgroundColor = this.value)">
-
-        <button class="close-btn" onclick="toggleSettings()">Close Settings</button>
+        <label>Music Volume</label>
+        <input type="range" id="volume-slider" min="0" max="100" value="50" oninput="adjustVolume()">
+        <label>Background Color</label>
+        <input type="color" id="bg-color" value="#121212" onchange="document.body.style.backgroundColor = this.value;">
+        <button class="close-btn" onclick="toggleSettings()">Close</button>
     </div>
 </body>
 </html>
