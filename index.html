@@ -180,7 +180,24 @@
         // Play selected music (Example)
         function playMusic() {
             const musicTrack = document.getElementById('music-select').value;
-            console.log('Playing music:', musicTrack); // Replace this with actual music playing logic
+            const audio = new Audio(musicTrack);
+            audio.volume = musicVolume / 100;  // Adjust volume
+            audio.play();
+        }
+
+        // Fetch MP3 files from your GitHub repo and populate the music selector
+        function loadMusic() {
+            const musicSelect = document.getElementById('music-select');
+            const musicFiles = [
+                "track1.mp3", "track2.mp3", "track3.mp3" // Add your .mp3 files here
+            ];
+
+            musicFiles.forEach(file => {
+                const option = document.createElement('option');
+                option.value = `https://github.com/XxSolarXx125/solarhq-bot-website/raw/main/${file}`; // Update with correct path
+                option.textContent = file.replace('.mp3', ''); // Display song name without extension
+                musicSelect.appendChild(option);
+            });
         }
 
         // Draggable Functionality for Settings UI
@@ -204,6 +221,9 @@
             document.addEventListener('mousemove', mouseMoveHandler);
             document.addEventListener('mouseup', mouseUpHandler);
         });
+
+        // Load music on page load
+        window.onload = loadMusic;
     </script>
 </head>
 <body class="dark">
@@ -222,9 +242,7 @@
         <div class="music-selector">
             <h2>Select a Music Track</h2>
             <select id="music-select">
-                <option value="track1.mp3">Track 1</option>
-                <option value="track2.mp3">Track 2</option>
-                <option value="track3.mp3">Track 3</option>
+                <!-- Options will be populated here -->
             </select>
             <button onclick="playMusic()">Play Music</button>
         </div>
